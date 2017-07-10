@@ -1,0 +1,17 @@
+frameworkVersion: ">=1.16.1"
+
+service: anonymization
+
+provider:
+  name: aws
+  runtime: python2.7
+  stage: dev
+  region: eu-west-1
+
+functions:
+  predict:
+    handler: handler.predict
+    events:
+      - http:
+          path: /predict
+          method: post
