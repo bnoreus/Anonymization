@@ -1,4 +1,5 @@
 sensitive.txt
 *.csv
 *.txt
-
+*.pyc
+.serverless/*

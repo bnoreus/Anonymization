@@ -1,33 +1,28 @@
 # -*- coding: utf-8 -*-
 import unittest
 from static_model import StaticModel
-
+from sentence_utils import word_offsets
 
 class StaticModelTest(unittest.TestCase):
-	def test_first_name(self):
+	def test_name(self):
 		model = StaticModel()
-		prediction = model.predict_first_name(u"hejsan")
-		self.assertEqual(prediction,u"hejsan")
+		prediction = model.predict_name(u"hejsan arvid, mvh Arvid.")
+		self.assertEqual(prediction,u"hejsan <NAME>, mvh <NAME>.")
 
-	def test_first_name2(self):
-		return None
+	def test_street(self):
 		model = StaticModel()
-		for i,message in enumerate(open("../sensitive.txt")):
-			message = unicode(message.strip(),"utf-8")
-			anonymized = model.predict_first_name(message)
-			anonymized = model.predict_last_name(anonymized)
-			print "### BEFORE ###"
-			print message
-			print "### AFTER ###"
-			print anonymized
-			print "\n"
-			if i > 1000:
-				break
-	def test_first_name3(self):
-		model = StaticModel()
-		for i,message in enumerate(open("../sensitive.txt")):
-			message = unicode(message.strip(),"utf-8")
-			model.predict_street(message)
+		prediction = model.predict_street(u"jag bor   på vargungevägen. , nej")
+		self.assertEqual(prediction,u"jag bor   på <STREET> , nej")
+		
+class SentenceUtilTest(unittest.TestCase):
+	def test_word_offsets(self):
+		sentence = u"hej jag  heter bure"
+		o = word_offsets(sentence)
+		self.assertEqual(len(o),4)
+		self.assertEqual(o[0],(0,3))
+		self.assertEqual(o[1],(4,7))
+		self.assertEqual(o[2],(9,14))
+		self.assertEqual(o[3],(15,19))
 
 if __name__ == "__main__":
 	unittest.main()
