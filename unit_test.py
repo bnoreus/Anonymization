@@ -15,16 +15,9 @@ class StaticModelTest(unittest.TestCase):
 		self.assertEqual(prediction,u"jag bor   på <STREET>. , nej")
 		
 class SentenceUtilTest(unittest.TestCase):
-	def test_word_offsets(self):
-		sentence = u"hej jag  heter bure"
-		o = word_offsets(sentence)
-		self.assertEqual(len(o),4)
-		self.assertEqual(o[0],(0,3))
-		self.assertEqual(o[1],(4,7))
-		self.assertEqual(o[2],(9,14))
-		self.assertEqual(o[3],(15,19))
-
 	def test_sentence_wrapper(self):
 		wrap = SentenceWrapper(u"hejsan! mamma, jag heter kalle!!")
+		self.assertEqual(wrap.to_string(),u"hejsan! mamma, jag heter kalle!!")
+
 if __name__ == "__main__":
 	unittest.main()

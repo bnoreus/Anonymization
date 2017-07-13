@@ -30,19 +30,3 @@ class Atom:
 		return self.type == "word"
 	def replace(self,new):
 		self.text = new
-
-def word_offsets(sentence):
-	words = sentence.split(" ")
-	offset = 0
-	starts = []
-	ends = []
-	for w in words:
-		if len(w) > 0:
-			starts.append(offset)
-			ends.append(offset+len(w))
-		offset += len(w)+1
-
-	return zip(starts,ends)
-
-def word_offsets2(sentence):
-	pass
