@@ -14,6 +14,11 @@ class StaticModelTest(unittest.TestCase):
 		prediction = model.predict_street(u"jag bor   på vargungevägen. , nej")
 		self.assertEqual(prediction,u"jag bor   på <STREET>. , nej")
 		
+	def test_name_ann(self):
+		model = StaticModel()
+		prediction = model.predict_name(u"hejsan hej, jag vill inte gå till ica nu.")
+		self.assertEqual(prediction,u"hejsan hej, jag vill inte gå till ica nu.")
+
 class SentenceUtilTest(unittest.TestCase):
 	def test_sentence_wrapper(self):
 		wrap = SentenceWrapper(u"hejsan! mamma, jag heter kalle!!")
