@@ -5,3 +5,4 @@ sensitive.txt
 .serverless/*
 models/*
 libraries/*
+data/*
