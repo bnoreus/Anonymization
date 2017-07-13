@@ -3,3 +3,5 @@ sensitive.txt
 *.txt
 *.pyc
 .serverless/*
+models/*
+libraries/*

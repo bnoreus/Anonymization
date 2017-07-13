@@ -3,7 +3,8 @@ import re
 import os
 from sentence_utils import *
 from train_utils import *
-from name_deep_learning_model import NameDeepLearning
+from deep_learning_name_model import NameDeepLearning
+from deep_learning_config import DL_CONFIG_PADDED_SIZE
 
 class StaticModel:
 	def __init__(self):
@@ -34,14 +35,14 @@ class StaticModel:
 		before_batch = []
 		after_batch = []
 		for word in wrapper.iter_words():
-			before_batch.append(pad_cut_string(wrapper.text_before(word),pad_right=False))
-			after_batch.append(pad_cut_string(wrapper.text_after(word),pad_right=True))
+			before_batch.append(pad_cut_string(wrapper.text_before(word),pad_right=False,pad_steps=DL_CONFIG_PADDED_SIZE))
+			after_batch.append(pad_cut_string(wrapper.text_after(word),pad_right=True,pad_steps=DL_CONFIG_PADDED_SIZE))
 
 		deeplearning_predictions = self.deeplearning_model.predict(before_batch,after_batch)
 		for i,word in enumerate(wrapper.iter_words()):
 			prediction = deeplearning_predictions[i]
-			if prediction > 0.7:
-				word.replace("<NAME>")
+			if prediction > 0.0:
+				word.replace(word.text+"["+str("%.3f" % prediction)+"]")
 		return wrapper.to_string()
 
 	def predict_street(self,text):

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-
 import json
+HERE = os.path.dirname(os.path.realpath(__file__)) # add dependencies for AWS lambda to detect
+sys.path.append(os.path.join(HERE, "libraries"))
 from static_model import StaticModel
+
 model = StaticModel()
 
 def lambda_gateway_response(code, body):
