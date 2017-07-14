@@ -8,7 +8,7 @@ from static_model import StaticModel
 
 model = StaticModel()
 
-def lambda_gateway_response(code, body):
+def gateway_response(code, body):
 	return {"statusCode": code, "body": json.dumps(body)}
 
 
@@ -17,7 +17,8 @@ def predict(event, context):
 		payload = json.loads(event["body"])
 		text = unicode(payload["text"],"utf-8") if isinstance(payload["text"],str) else payload["text"]
 	except Exception as e:
-		return lambda_gateway_response(503,{"error":"The payload needs to be a valid JSON. Message: "+str(e)})
+		return gateway_response(503,{"error":"The payload needs to be a valid JSON. Message: "+str(e)})
+
 
 	try:
 		text = model.predict_email(text)
@@ -25,6 +26,6 @@ def predict(event, context):
 		text = model.predict_street(text)
 		text = model.predict_number(text)
 		text = text.encode("utf-8")
-		return lambda_gateway_response(200,{"text":text})
+		return gateway_response(200,{"text":text})
 	except Exception as e:
-		return lambda_gateway_response(503,{"error":"Prediction error. Message: "+str(e)})
+		return gateway_response(503,{"error":"Prediction error. Message: "+str(e)})

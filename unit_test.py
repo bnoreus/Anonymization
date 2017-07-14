@@ -19,7 +19,7 @@ class StaticModelTest(unittest.TestCase):
 	def test_name_ann(self):
 		model = StaticModel()
 		print "\n\nPREDICTION:\n"
-		text = u"Hej Bure, vad kan jag hjälpa dig med?"
+		text = u"Jag och min vän Kalle besökte er hemsida. "
 		prediction = model.predict_name_ann(text)
 		print prediction
 		print "\n\n"

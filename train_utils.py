@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
 def pad_cut_string(txt,pad_right=True,pad_steps=50):
-	txt = re.split(u"(<NAME>|<PAD>)",txt)
-	txt = [list(s) if (s != "<NAME>" and s != "<PAD>") else [s] for s in txt]
+	tokens = set(["<NAME>","<EMAIL>","<PAD>","<NUM>","<STREET>"])
+	txt = re.split(u"("+"|".join(tokens)+")",txt)
+	txt = [list(s) if not s in tokens else [s] for s in txt]
 	txt = reduce(list.__add__,txt)
 	if pad_right:
 		txt = txt[:pad_steps]

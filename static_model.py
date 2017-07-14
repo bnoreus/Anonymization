@@ -37,6 +37,10 @@ class StaticModel:
 		for word in wrapper.iter_words():
 			before_batch.append(pad_cut_string(wrapper.text_before(word),pad_right=False,pad_steps=DL_CONFIG_PADDED_SIZE))
 			after_batch.append(pad_cut_string(wrapper.text_after(word),pad_right=True,pad_steps=DL_CONFIG_PADDED_SIZE))
+			#print "Before"
+			#print pad_cut_string(wrapper.text_before(word),pad_right=False,pad_steps=DL_CONFIG_PADDED_SIZE)
+			#print "After"
+			#print pad_cut_string(wrapper.text_after(word),pad_right=True,pad_steps=DL_CONFIG_PADDED_SIZE)
 
 		deeplearning_predictions = self.deeplearning_model.predict(before_batch,after_batch)
 		for i,word in enumerate(wrapper.iter_words()):
