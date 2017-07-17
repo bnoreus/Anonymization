@@ -3,8 +3,8 @@ import re
 import os
 from sentence_utils import *
 from train_utils import *
-from deep_learning_name_model import NameDeepLearning
-from deep_learning_config import DL_CONFIG_PADDED_SIZE
+#from deep_learning_name_model import NameDeepLearning
+#from deep_learning_config import DL_CONFIG_PADDED_SIZE
 
 class StaticModel:
 	def __init__(self):
@@ -15,8 +15,7 @@ class StaticModel:
 		self.last_names = set([unicode(line,"utf-8").strip().lower() for line in open(os.path.join(script_dir,"data/last_names.csv"))])
 		self.streets = set([unicode(line,"utf-8").strip().lower() for line in open(os.path.join(script_dir,"data/streets.csv"))])
 
-		self.deeplearning_model = NameDeepLearning()
-
+		#self.deeplearning_model = NameDeepLearning()
 	def predict_number(self,text):
 		return re.sub(r"\d","<NUM>",text)
 
