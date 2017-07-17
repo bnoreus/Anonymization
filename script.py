@@ -17,12 +17,19 @@ API_URL = "https://jb305p1y5i.execute-api.eu-west-1.amazonaws.com/dev/predict"
 
 def iter_file(url):
 	file = open(url)
-	header = unicode(file.readline(),"utf-8").strip()
+	try: 
+		header = unicode(file.readline(),"utf-8").strip()
+	except UnicodeDecodeError as e:
+		print("Could not decode the textfile. Are you sure it is saved as UTF-8? Message: "+str(e))
+
 	if header != u"Timestamp,ConversationId,CustomerSpeaking,Message":
 		raise Exception("Invalid/No header! Make sure your hear has the following format:\n\tTimestamp,ConversationId,CustomerSpeaking,Message")
 
 	for line in file:
-		line = unicode(line,"utf-8").strip().split(",")
+		try:
+			line = unicode(line,"utf-8").strip().split(",")
+		except UnicodeDecodeError as e:
+			print("Could not decode the textfile. Are you sure it is saved as UTF-8? Message: "+str(e))
 		if len(line) < 4:
 			raise Exception("Every row must have four columns (Timestamp, ConversationId, CustomerSpeaking and Message)")
 
