@@ -9,13 +9,33 @@ from train_utils import *
 class StaticModel:
 	def __init__(self):
 		# Load static resources
-		script_dir = os.path.dirname(__file__)
-
-		self.first_names = set([unicode(line,"utf-8").strip().lower() for line in open(os.path.join(script_dir,"data/first_names.csv"))])
-		self.last_names = set([unicode(line,"utf-8").strip().lower() for line in open(os.path.join(script_dir,"data/last_names.csv"))])
-		self.streets = set([unicode(line,"utf-8").strip().lower() for line in open(os.path.join(script_dir,"data/streets.csv"))])
-
+		self.script_dir = os.path.dirname(__file__)
+		self.uncommon_names = self.word_set("data/uncommon_names_with_words.txt")
+		self.common_names = self.word_set("data/common_names_with_words.txt")
+		self.uncommon_lastnames = self.word_set("data/uncommon_lastnames_with_words.txt")
+		self.common_lastnames = self.word_set("data/common_lastnames_with_words.txt")
+		self.guaranteed_names = self.word_set("data/guaranteed_names.txt")
+		self.guaranteed_lastnames = self.word_set("data/guaranteed_lastnames.txt")
+		
+		self.streets = set([unicode(line,"utf-8").strip().lower() 
+			for line in open(os.path.join(self.script_dir,"data/streets.csv"))])
 		#self.deeplearning_model = NameDeepLearning()
+		
+	def word_set(self,url):
+		s = {}
+		
+		for line in open(os.path.join(self.script_dir,url)):
+			line = unicode(line,"utf-8").strip().lower()
+			if line[0:2] == "__":
+				s[line[2:]] = False
+			else:
+				if line in s:
+					s[line] = True and s[line]
+				else:
+					s[line] = True
+		return set([k for k,v in s.iteritems() if v])
+
+
 	def predict_number(self,text):
 		return re.sub(r"\d","<NUM>",text)
 
@@ -25,7 +45,13 @@ class StaticModel:
 	def predict_name(self,text):
 		wrapper = SentenceWrapper(text)
 		for word in wrapper.iter_words():
-			if word.text.lower() in self.first_names or word.text.lower() in self.last_names:
+			w = word.text.lower()
+			if w in self.guaranteed_names or w in self.guaranteed_lastnames:
+				word.replace("<NAME>")
+			elif (w in self.common_names or
+				 w in self.uncommon_names or
+				 w in self.common_lastnames or 
+				 w in self.uncommon_lastnames) and word.is_capitalized():
 				word.replace("<NAME>")
 		return wrapper.to_string()
 	

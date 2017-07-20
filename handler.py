@@ -26,7 +26,7 @@ def predict(event, context):
 		for i,text in enumerate(messages):
 			text = model.predict_email(text)
 			text = model.predict_name(text)
-			text = model.predict_street(text)
+			#text = model.predict_street(text)
 			text = model.predict_number(text)
 			messages[i] = text
 		return gateway_response(200,{"messages":messages})

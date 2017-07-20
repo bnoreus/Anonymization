@@ -5,10 +5,9 @@ from sentence_utils import *
 
 class StaticModelTest(unittest.TestCase):
 	def test_name(self):
-		pass
-		#model = StaticModel()
-		#prediction = model.predict_name(u"hejsan arvid, mvh ( henrik).")
-		#self.assertEqual(prediction,u"hejsan <NAME>, mvh ( <NAME>).")
+		model = StaticModel()
+		prediction = model.predict_name(u"hejsan david, mvh ( Henrik).")
+		self.assertEqual(prediction,u"hejsan <NAME>, mvh ( <NAME>).")
 
 	def test_street(self):
 		pass
@@ -17,14 +16,11 @@ class StaticModelTest(unittest.TestCase):
 		#self.assertEqual(prediction,u"jag bor   på <STREET>. , nej")
 		
 	def test_name_ann(self):
-		model = StaticModel()
-		print "\n\nPREDICTION:\n"
-		text = u"Jag och min vän Kalle besökte er hemsida. "
-		prediction = model.predict_name_ann(text)
-		print prediction
-		print "\n\n"
-		#self.assertEqual(prediction,u"hejsan hej, jag vill inte gå till ica nu.")
-
+		pass
+		#model = StaticModel()
+		#text = u"Jag och min vän Kalle besökte er hemsida. "
+		#prediction = model.predict_name_ann(text)
+		
 class SentenceUtilTest(unittest.TestCase):
 	def test_sentence_wrapper(self):
 		wrap = SentenceWrapper(u"hejsan! mamma, jag heter kalle!!")
