@@ -64,3 +64,5 @@ class Atom:
 			return False
 		"""
 		return self.text[0].isupper()
+	def all_caps(self):
+		return self.text.isupper()

@@ -10,30 +10,35 @@ class StaticModel:
 	def __init__(self):
 		# Load static resources
 		self.script_dir = os.path.dirname(__file__)
-		self.uncommon_names = self.word_set("data/uncommon_names_with_words.txt")
-		self.common_names = self.word_set("data/common_names_with_words.txt")
-		self.uncommon_lastnames = self.word_set("data/uncommon_lastnames_with_words.txt")
-		self.common_lastnames = self.word_set("data/common_lastnames_with_words.txt")
-		self.guaranteed_names = self.word_set("data/guaranteed_names.txt")
-		self.guaranteed_lastnames = self.word_set("data/guaranteed_lastnames.txt")
+		self.names_with_words_blacklist,self.names_with_words_whitelist = \
+			 self.name_set([
+				"data/uncommon_names_with_words.txt",
+				"data/common_names_with_words.txt",
+				"data/uncommon_lastnames_with_words.txt",
+				"data/common_lastnames_with_words.txt"])
+		self.guaranteed_blacklist,self.guaranteed_whitelist = \
+			self.name_set(["data/guaranteed_names.txt","data/guaranteed_lastnames.txt"])
+
 		
 		self.streets = set([unicode(line,"utf-8").strip().lower() 
 			for line in open(os.path.join(self.script_dir,"data/streets.csv"))])
 		#self.deeplearning_model = NameDeepLearning()
 		
-	def word_set(self,url):
+	def name_set(self,urls):
 		s = {}
-		
-		for line in open(os.path.join(self.script_dir,url)):
-			line = unicode(line,"utf-8").strip().lower()
-			if line[0:2] == "__":
-				s[line[2:]] = False
-			else:
-				if line in s:
-					s[line] = True and s[line]
+		for url in urls:
+			for line in open(os.path.join(self.script_dir,url)):
+				line = unicode(line,"utf-8").strip().lower()
+				if line[0:2] == "__":
+					s[line[2:]] = False
 				else:
-					s[line] = True
-		return set([k for k,v in s.iteritems() if v])
+					if line in s:
+						s[line] = True and s[line]
+					else:
+						s[line] = True
+		blacklist = set([k for k,anonymize in s.iteritems() if anonymize])
+		whitelist = set([k for k,anonymize in s.iteritems() if not anonymize])
+		return blacklist,whitelist
 
 
 	def predict_number(self,text):
@@ -46,13 +51,17 @@ class StaticModel:
 		wrapper = SentenceWrapper(text)
 		for word in wrapper.iter_words():
 			w = word.text.lower()
-			if w in self.guaranteed_names or w in self.guaranteed_lastnames:
+			if word.all_caps():
+				pass # If it is all caps, it's probably an abbreviation. 
+			elif w in self.names_with_words_whitelist or w in self.guaranteed_whitelist:
+				pass # Keep it if it's in a whitelist
+			elif w in self.guaranteed_blacklist:
 				word.replace("<NAME>")
-			elif (w in self.common_names or
-				 w in self.uncommon_names or
-				 w in self.common_lastnames or 
-				 w in self.uncommon_lastnames) and word.is_capitalized():
+			elif w in self.names_with_words_blacklist and word.is_capitalized():
 				word.replace("<NAME>")
+			else:
+				pass #Otherwise, just keep it
+				
 		return wrapper.to_string()
 	
 	def predict_name_ann(self,text):

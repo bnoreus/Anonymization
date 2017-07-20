@@ -65,7 +65,7 @@ if __name__ == "__main__":
 		message_batch = []
 		for msg_idx,(timestamp,convo_id,customer_speaking,message) in enumerate(iter_file(INPUT_URL)):
 			if msg_idx % 1000 == 0:
-				print("{:,}".format(msg_idx))
+				print("{:,}".format(msg_idx)+" lines processed")
 			meta_batch.append(datetime.strftime(timestamp,"%Y-%m-%d %H:%M:%S")+","+convo_id+","+customer_speaking)
 			message_batch.append(message)
 
